@@ -138,6 +138,9 @@
                     },
                     success: function(data){
                         $('#insert-form')[0].reset();
+                        if (data) {
+                            window.location.href = 'page_2.php';
+                        }
                     }
                 })
             });

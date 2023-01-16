@@ -199,6 +199,7 @@ $output = '';
 // pass: 
 if ($_GET['a'] == 'page1') {
 
+    $output = false;
     $thisName = $_POST['name'];
     $thisEmail = $_POST['email'];
     $thisAge = $_POST['age'];
@@ -206,27 +207,28 @@ if ($_GET['a'] == 'page1') {
     $thisLine = $_POST['line'];
     $thisGender = $_POST['gender'];
     $thisJob = $_POST['job'];
+    $timestamp = '';
     // $mem_username = mysqli_real_escape_string($condb, $_POST['mem_username']);
     // $mem_password = mysqli_real_escape_string($condb, sha1($_POST['mem_password']));
     if ($thisName != '' && $thisAge != '' && $thisPhone) {
 
-        echo 'Insert to Database Success';
-        $Insert = "INSERT INTO wrt_profile (profile_id, profile_name, profile_email, profile_age, profile_phone, profile_lineId, profile_gender, profile_job)
-                    VALUES (NULL, '$thisName', '$thisEmail', '$thisAge', '$thisPhone', '$thisLine', '$thisGender', '$thisJob')";
+        $time = mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('y'));
+        $timestamp = date('Y-m-d h:i:sa', $time);
+        // echo date('Y-m-d h:i:sa', $timestamp);
+        
+        $Insert = "INSERT INTO wrt_profile (profile_id, profile_name, profile_email, profile_age, profile_phone, profile_lineId, profile_gender, profile_job, profile_timestamp)
+                    VALUES (NULL, '$thisName', '$thisEmail', '$thisAge', '$thisPhone', '$thisLine', '$thisGender', '$thisJob', '$timestamp')";
         // MySQLInsert($Insert);
         $result = mysqli_query($condb, $Insert) or die("Error in query: $Insert " . mysqli_error($condb) . "<br>$Insert");
         mysqli_close($condb);
 
         if ($result) {
-            echo "<script type='text/javascript'>";
-            //echo "alert('เพิ่มข้อมูลเรียบร้อย');";
-            echo "window.location = 'list_mem.php?mem_add=mem_add'; ";
-            echo "</script>";
-        } else {
-            echo "<script type='text/javascript'>";
-            echo "window.location = 'list_mem.php?mem_add_error=mem_add_error'; ";
-            echo "</script>";
+            echo 'Insert to Database Success';
+            $output = true;
+        }else{
+            echo 'Insert to Database Err';
         }
+
     }
 
 
