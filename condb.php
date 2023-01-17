@@ -7,7 +7,7 @@ date_default_timezone_set('Asia/Bangkok');
 
 error_reporting( error_reporting() & ~E_NOTICE );//ปิดerror ที่ต้องใส่ @
 if($condb){
-	echo "Connect";
+	// echo "Connect";
 }else{
 	echo "error";
 }

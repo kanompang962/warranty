@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -137,9 +138,10 @@
                         $('#next1').val('insert...');
                     },
                     success: function(data){
-                        $('#insert-form')[0].reset();
+                        // $('#insert-form')[0].reset();
                         if (data) {
-                            window.location.href = 'page_2.php';
+                            console.log(data);
+                            // window.location.href = 'page_2.php';
                         }
                     }
                 })

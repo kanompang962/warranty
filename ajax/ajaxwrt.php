@@ -1,6 +1,7 @@
 <?php
 include('../condb.php');
 date_default_timezone_set('Asia/Bangkok');
+session_start();
 $resultArray = array();
 $arrCol = array();
 $output = '';
@@ -199,7 +200,6 @@ $output = '';
 // pass: 
 if ($_GET['a'] == 'page1') {
 
-    $output = false;
     $thisName = $_POST['name'];
     $thisEmail = $_POST['email'];
     $thisAge = $_POST['age'];
@@ -215,20 +215,34 @@ if ($_GET['a'] == 'page1') {
         $time = mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('y'));
         $timestamp = date('Y-m-d h:i:sa', $time);
         // echo date('Y-m-d h:i:sa', $timestamp);
-        
+
         $Insert = "INSERT INTO wrt_profile (profile_id, profile_name, profile_email, profile_age, profile_phone, profile_lineId, profile_gender, profile_job, profile_timestamp)
                     VALUES (NULL, '$thisName', '$thisEmail', '$thisAge', '$thisPhone', '$thisLine', '$thisGender', '$thisJob', '$timestamp')";
         // MySQLInsert($Insert);
         $result = mysqli_query($condb, $Insert) or die("Error in query: $Insert " . mysqli_error($condb) . "<br>$Insert");
-        mysqli_close($condb);
+        // mysqli_close($condb);
 
         if ($result) {
-            echo 'Insert to Database Success';
-            $output = true;
-        }else{
-            echo 'Insert to Database Err';
-        }
+            // echo 'Insert to Database Success';
+            $sql = "SELECT `profile_id`, `profile_name`, `profile_timestamp` FROM `wrt_profile` WHERE `profile_timestamp` = '$timestamp'";
+            $query = mysqli_query($condb, $sql) or die("Error in query: $sql " . mysqli_error($condb) . "<br>$sql");
+            if ($query->num_rows > 0) {
+                // output data of each row
+                while ($row = $query->fetch_assoc()) {
+                    $profile_id = $row['profile_id'];
+                    $_SESSION['profile_id'] = $profile_id;
+                }
+                // $profile_id = $query['profile_id'];
 
+            }
+            if (isset($_SESSION['profile_id'])) {
+
+                $output = 'session';
+            }
+        } else {
+            // echo 'Insert to Database Err';
+            $output = false;
+        }
     }
 
 
@@ -242,6 +256,14 @@ if ($_GET['a'] == 'page2') {
     $thisObjective = $_POST['objective'];
     $thisMarket = $_POST['market'];
     $thisBranch = $_POST['branch'];
+
+    // if (isset($_SESSION['profile_id'])) {
+
+    //     $output = $_SESSION['profile_id'];
+    // }else{
+    //     $output = false;
+    // }
+
 }
 
 if ($_GET['a'] == 'page3') {
